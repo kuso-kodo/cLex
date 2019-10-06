@@ -1,0 +1,13 @@
+#ifndef TOKEN_TYPE
+#define TOKEN_TYPE(X, Y)
+#endif
+TOKEN_TYPE(Keyword, "KeyWord")
+TOKEN_TYPE(Identifier, "Identifier")
+TOKEN_TYPE(UniversalCharacterName, "UniversalCharacterName")
+TOKEN_TYPE(IntegerConstant, "IntegerConstant")
+TOKEN_TYPE(FloatingConstant, "FloatingConstant")
+TOKEN_TYPE(CharacterConstant, "CharacterConstant")
+TOKEN_TYPE(StringLiteral, "StringLiteral")
+TOKEN_TYPE(Punctuator, "Punctuator")
+TOKEN_TYPE(HeaderName, "HeaderName")
+TOKEN_TYPE(Unknown, "Unknown")
