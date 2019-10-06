@@ -6,7 +6,7 @@
 
 class FileWrapper {
 public:
-    FileWrapper(std::ifstream& file) : sourceFile_{file} {
+    explicit FileWrapper(std::ifstream& file) : sourceFile_{file} {
         this->read();
     }
 
@@ -16,16 +16,21 @@ public:
         if(buffer_.empty()) {
             this->read();
         }
+        return c;
     }
 
     char peekChar(size_t const offset) {
-        while(sourceFile_ && buffer_.size() < offset) {
+        while(!sourceFile_.eof() && buffer_.size() <= offset) {
             this->read();
         }
-        if(buffer_.size() < offset) {
+        if(buffer_.size() <= offset) {
             throw std::out_of_range("Early EOF. Offset out of range.");
         }
         return buffer_.at(offset);
+    }
+
+    bool eof() {
+        return sourceFile_.eof() && buffer_.empty();
     }
 private:
     void read() {
@@ -33,6 +38,7 @@ private:
         if(!(sourceFile_ >> buffer_.back())) {
             buffer_.pop_back();
         }
+        std::cout << "<|" << buffer_.back() << "|>";
     }
     std::ifstream& sourceFile_;
     std::deque<char> buffer_;
