@@ -250,12 +250,34 @@ namespace cLex {
 
     bool isPermittedNumericToken(const char c) {
         return isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') ||
-                (c == 'x') || (c == 'X') || (c == 'p') || (c == 'l') || (c == 'L');
+                (c == 'x') || (c == 'X') || (c == 'p') || (c == 'l') || (c == 'L') || (c == 'u') || (c == 'U') || (c == '.');
+    }
+
+    bool isPermittedNumericSuffix(const char c) {
+        return c == 'f' || c == 'F' || c == 'L' || c == 'l';
+    }
+
+    bool isPermittedNumericSuffix(const char c1, const char c2) {
+        return (c1 == 'L' && c2 == 'L') || (c1 == 'l' && c2 == 'l') || ((c1 == 'u' || c1 == 'U') && (c2 == 'L' || c2 == 'l'));
+    }
+
+    bool isPermittedNumericSuffix(const char c1, const char c2, const char c3) {
+        return ((c1 == 'u' || c1 == 'U') && ((c2 == 'L' && c3 == 'L') || (c2 == 'l' && c3 == 'l')));
     }
 
     Token Lexer::getNextNumericToken() {
-
-        return Token(TokenType::Unknown, fileWrapper_.getLocation(), tokenBuffer_);
+        while(isPermittedNumericToken(fileWrapper_.peekChar(1))) {
+            tokenBuffer_.push_back(fileWrapper_.getNextChar());
+        }
+        size_t offset;
+        std::stof(tokenBuffer_, &offset);
+        if(offset == tokenBuffer_.size() ||
+            (offset + 1 == tokenBuffer_.size() && isPermittedNumericSuffix(tokenBuffer_.at(offset))) ||
+                (offset + 2 == tokenBuffer_.size() && isPermittedNumericSuffix(tokenBuffer_.at(offset), tokenBuffer_.at(offset + 1))) ||
+                        (offset + 3 == tokenBuffer_.size() && isPermittedNumericSuffix(tokenBuffer_.at(offset), tokenBuffer_.at(offset + 1), tokenBuffer_.at(offset + 2)))) {
+            return Token(TokenType::NumericConstant, currentLocation_, tokenBuffer_);
+        }
+        return Token(TokenType::NumericConstantWithError, currentLocation_, tokenBuffer_);
     }
 
     Token Lexer::getNextStringLiterialToken() {

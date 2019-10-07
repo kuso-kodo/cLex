@@ -3,9 +3,8 @@
 #endif
 TOKEN_TYPE(Keyword, "KeyWord")
 TOKEN_TYPE(Identifier, "Identifier")
-TOKEN_TYPE(UniversalCharacterName, "UniversalCharacterName")
-TOKEN_TYPE(IntegerConstant, "IntegerConstant")
-TOKEN_TYPE(FloatingConstant, "FloatingConstant")
+TOKEN_TYPE(NumericConstant, "NumericConstant")
+TOKEN_TYPE(NumericConstantWithError,"NumericConstant(Error Detected)")
 TOKEN_TYPE(CharacterConstant, "CharacterConstant")
 TOKEN_TYPE(StringLiteral, "StringLiteral")
 TOKEN_TYPE(Punctuator, "Punctuator")
