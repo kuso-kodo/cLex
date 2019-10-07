@@ -3,45 +3,73 @@
 
 #include <deque>
 #include <fstream>
+#include <utility>
+#include <cassert>
+#include "token.h"
 
-class FileWrapper {
-public:
-    explicit FileWrapper(std::ifstream& file) : sourceFile_{file} {
-        this->read();
-    }
-
-    char getNextChar() {
-        auto c = buffer_.front();
-        buffer_.pop_front();
-        if(buffer_.empty()) {
+namespace cLex {
+    class FileWrapper {
+    public:
+        explicit FileWrapper(std::string fileName) : fileName_{std::move(fileName)}, line_{1}, column_{0}, eof_{false} {
+            sourceFile_.open(fileName_);
+            assert(!sourceFile_.fail());
             this->read();
         }
-        return c;
-    }
 
-    char peekChar(size_t const offset) {
-        while(!sourceFile_.eof() && buffer_.size() <= offset) {
-            this->read();
-        }
-        if(buffer_.size() <= offset) {
-            throw std::out_of_range("Early EOF. Offset out of range.");
-        }
-        return buffer_.at(offset);
-    }
+        char getNextChar() {
+            if(this->eof())
+                return '\0';
 
-    bool eof() {
-        return sourceFile_.eof() && buffer_.empty();
-    }
-private:
-    void read() {
-        buffer_.emplace_back();
-        if(!(sourceFile_ >> buffer_.back())) {
-            buffer_.pop_back();
+            if(buffer_.empty()) {
+                this->read();
+            }
+            auto c = buffer_.front();
+            buffer_.pop_front();
+
+            // Update line_ and column_
+            if(c == '\n') {
+                line_++;
+                column_ = 0;
+            } else {
+                column_++;
+            }
+
+            return c;
         }
-        std::cout << "<|" << buffer_.back() << "|>";
-    }
-    std::ifstream& sourceFile_;
-    std::deque<char> buffer_;
-};
+
+        char peekChar(size_t const offset) {
+            while(!sourceFile_.eof() && buffer_.size() <= offset) {
+                this->read();
+            }
+            if(buffer_.size() <= offset) {
+                throw std::out_of_range("Early EOF. Offset out of range.");
+            }
+            return buffer_.at(offset);
+        }
+
+        bool eof() {
+            return eof_ && buffer_.empty();
+        }
+
+        friend std::ostream& operator<<(std::ostream& os, const FileWrapper & fileWrapper);
+        TokenLocation getLocation();
+    private:
+        void read() {
+            if(!eof_) {
+                auto c = sourceFile_.get();
+                buffer_.push_back(c);
+                sourceFile_.peek();
+                eof_ = sourceFile_.eof();
+            }
+        }
+
+        std::string fileName_;
+        std::ifstream sourceFile_;
+        std::deque<char> buffer_;
+        bool eof_;
+        size_t line_;
+        size_t column_;
+    };
+}
 
 #endif //CLEX_FILE_H
