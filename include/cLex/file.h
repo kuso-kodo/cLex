@@ -38,17 +38,26 @@ namespace cLex {
         }
 
         char peekChar(size_t const offset) {
-            while(!sourceFile_.eof() && buffer_.size() <= offset) {
+            while(!sourceFile_.eof() && buffer_.size() < offset) {
                 this->read();
             }
-            if(buffer_.size() <= offset) {
+            if(buffer_.size() < offset) {
                 throw std::out_of_range("Early EOF. Offset out of range.");
             }
-            return buffer_.at(offset);
+            return buffer_.at(offset - 1);
+        }
+
+        void eatChars(size_t const num) {
+            for(size_t i = 0; i < num; i++)
+                getNextChar();
         }
 
         bool eof() {
             return eof_ && buffer_.empty();
+        }
+
+        void putBack(char c) {
+            buffer_.push_back(c);
         }
 
         friend std::ostream& operator<<(std::ostream& os, const FileWrapper & fileWrapper);

@@ -41,8 +41,7 @@ namespace cLex {
             case TokenType::Punctuator:
                 result += std::string(toCStyleString(this->punctuator_));
                 break;
-            case TokenType::Unknown:
-                result += "Unknown";
+            case TokenType::EndOfFile:
                 break;
             default:
                 result += this->literalValue_;

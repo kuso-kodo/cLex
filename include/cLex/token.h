@@ -66,6 +66,8 @@ namespace cLex {
             assert(tokenType != TokenType::Keyword && tokenType != TokenType::Punctuator);
         }
 
+        Token() : Token(TokenType::Unknown, TokenLocation(), KeyWord::None, Punctuator::None, "") {}
+
         [[nodiscard]] TokenType getTokenType() const {
             return tokenType_;
         }
