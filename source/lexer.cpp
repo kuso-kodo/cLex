@@ -2,17 +2,19 @@
 
 #define GOT_TOKEN(TYPE, VALUE) return Token(TYPE, currentLocation_, VALUE)
 #define GOT_PUNCTOATOR(X) GOT_TOKEN(TokenType::Punctuator, X)
+#define GOT_KEYWORD(X) GOT_TOKEN(TokenType::Keyword, X)
 
 namespace cLex {
+
     Token Lexer::getNextToken() {
         tokenBuffer_.clear();
         if(fileWrapper_.eof())
             return Token(TokenType::EndOfFile, fileWrapper_.getLocation(), "");
         auto c = fileWrapper_.getNextChar();
         while(isblank(c) || c == '\n') {
-            c = fileWrapper_.getNextChar();
             if(fileWrapper_.eof())
                 return Token(TokenType::EndOfFile, fileWrapper_.getLocation(), "");
+            c = fileWrapper_.getNextChar();
         }
         currentLocation_ = fileWrapper_.getLocation();
         switch (c) {
@@ -197,6 +199,8 @@ namespace cLex {
                 if(fileWrapper_.peekChar(1) == '#') {
                     fileWrapper_.eatChars(1);
                     GOT_PUNCTOATOR(Punctuator::HashHash);
+                } else if(currentLocation_.getColCount() == 1) {
+                    return getNextPreprocessingDirectiveToken();
                 } else
                     GOT_PUNCTOATOR(Punctuator::Hash);
             case '\"':
@@ -215,6 +219,9 @@ namespace cLex {
                 } else if(fileWrapper_.peekChar(1) == '\'') {
                     fileWrapper_.eatChars(1);
                     return getNextCharacterConstantToken();
+                } else {
+                    tokenBuffer_.push_back(c);
+                    return getNextIdentifierToken();
                 }
             case 'u':
                 if(fileWrapper_.peekChar(1) == '\"') {
@@ -226,13 +233,36 @@ namespace cLex {
                 } else if((fileWrapper_.peekChar(1) == '8') && fileWrapper_.peekChar(2) == '\"') {
                     fileWrapper_.eatChars(2);
                     return getNextStringLiterialToken();
+                } else {
+                    tokenBuffer_.push_back(c);
+                    return getNextIdentifierToken();
                 }
+            case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G':
+            case 'H': case 'I': case 'J': case 'K': /*'L'*/   case 'M': case 'N':
+            case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T':    /*'U'*/
+            case 'V': case 'W': case 'X': case 'Y': case 'Z':
+            case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': case 'g':
+            case 'h': case 'i': case 'j': case 'k': case 'l': case 'm': case 'n':
+            case 'o': case 'p': case 'q': case 'r': case 's': case 't':    /*'u'*/
+            case 'v': case 'w': case 'x': case 'y': case 'z':
+            case '_':
+                tokenBuffer_.push_back(c);
+                return getNextIdentifierToken();
             default:
                 tokenBuffer_.push_back(c);
                 break;
         }
         auto result = Token(TokenType::Unknown, fileWrapper_.getLocation(), tokenBuffer_);
         return result;
+    }
+
+    Token Lexer::getNextPreprocessingDirectiveToken() {
+        char c = '*';
+        while(!fileWrapper_.eof() && (fileWrapper_.peekChar(1) != '\n' || c == '\\')) {
+            c = fileWrapper_.getNextChar();
+            tokenBuffer_.push_back(c);
+        }
+        return Token(TokenType::PreprocessingDirective, currentLocation_, tokenBuffer_);
     }
 
     void Lexer::skipLineComment() {
@@ -266,7 +296,7 @@ namespace cLex {
     }
 
     Token Lexer::getNextNumericToken() {
-        while(isPermittedNumericToken(fileWrapper_.peekChar(1))) {
+        while(!fileWrapper_.eof() && isPermittedNumericToken(fileWrapper_.peekChar(1))) {
             tokenBuffer_.push_back(fileWrapper_.getNextChar());
         }
         size_t offset;
@@ -294,5 +324,18 @@ namespace cLex {
             tokenBuffer_.push_back(c);
         }
         return Token(TokenType::CharacterConstant, currentLocation_, tokenBuffer_);
+    }
+
+    bool isPermittedChar(const char c) {
+        return c == '_' || isalnum(c);
+    }
+
+    Token Lexer::getNextIdentifierToken() {
+        while(!fileWrapper_.eof() && isPermittedChar(fileWrapper_.peekChar(1))) {
+            tokenBuffer_.push_back(fileWrapper_.getNextChar());
+        }
+#define KEYWORD(X, Y) if(tokenBuffer_ == Y) GOT_KEYWORD(KeyWord:: ##X);
+#include <def/Keyword.def>
+        return Token(TokenType::Identifier, currentLocation_, tokenBuffer_);
     }
 }

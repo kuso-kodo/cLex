@@ -33,6 +33,9 @@ namespace cLex {
         TokenLocation() : fileName{"UNKNOWN"}, colCount{0}, lineCount{1} {}
         TokenLocation(std::string file, size_t col, size_t line) :
         fileName{std::move(file)}, colCount{col}, lineCount{line} {}
+        [[nodiscard]] size_t getColCount() const {
+            return colCount;
+        }
         [[nodiscard]] std::string toString() const {
             return fileName + ":" + std::to_string(lineCount) + ":" + std::to_string(colCount);
         }

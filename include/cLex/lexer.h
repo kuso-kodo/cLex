@@ -21,6 +21,8 @@ namespace cLex {
         Token getNextNumericToken();
         Token getNextStringLiterialToken();
         Token getNextCharacterConstantToken();
+        Token getNextIdentifierToken();
+        Token getNextPreprocessingDirectiveToken();
         FileWrapper fileWrapper_;
         TokenLocation currentLocation_;
         Token token_;
