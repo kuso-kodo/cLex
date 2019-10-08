@@ -1,2 +1,6 @@
 *-build-*/*
 .idea/
+*.aux
+*.log
+*.out
+*.synctex.gz

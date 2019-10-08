@@ -280,7 +280,7 @@ namespace cLex {
 
     bool isPermittedNumericToken(const char c) {
         return isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f') ||
-                (c == 'x') || (c == 'X') || (c == 'p') || (c == 'l') || (c == 'L') || (c == 'u') || (c == 'U') || (c == '.');
+                (c == 'x') || (c == 'X') || (c == 'p') || (c == 'P') || (c == 'l') || (c == 'L') || (c == 'u') || (c == 'U') || (c == '.');
     }
 
     bool isPermittedNumericSuffix(const char c) {
@@ -297,6 +297,11 @@ namespace cLex {
 
     Token Lexer::getNextNumericToken() {
         while(!fileWrapper_.eof() && isPermittedNumericToken(fileWrapper_.peekChar(1))) {
+            if((fileWrapper_.peekChar(1) == 'e' || fileWrapper_.peekChar(1) == 'E' ||
+                    fileWrapper_.peekChar(1) == 'p' || fileWrapper_.peekChar(1) == 'P') &&
+                    (fileWrapper_.peekChar(2) == '+' || fileWrapper_.peekChar(2) == '-')) {
+                tokenBuffer_.push_back(fileWrapper_.getNextChar());
+            }
             tokenBuffer_.push_back(fileWrapper_.getNextChar());
         }
         size_t offset;
