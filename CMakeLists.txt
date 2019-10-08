@@ -56,32 +56,6 @@ if(NOT BUILD_SHARED_LIBS)
   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -D${PROJECT_NAME_UPPER}_STATIC)
 endif()
 
-##################################################    Testing     ##################################################
-if(BUILD_TESTS)
-  enable_testing     ()
-  set                (TEST_MAIN_NAME catch_main)
-  set                (TEST_MAIN_SOURCES tests/catch/catch.hpp tests/catch/main.cpp)
-  add_library        (${TEST_MAIN_NAME} OBJECT ${TEST_MAIN_SOURCES})
-  set_property       (TARGET ${TEST_MAIN_NAME} PROPERTY FOLDER tests/catch)
-  assign_source_group(${TEST_MAIN_SOURCES})
-
-  file(GLOB PROJECT_TEST_CPPS tests/*.cpp)
-  foreach(_SOURCE ${PROJECT_TEST_CPPS})
-    get_filename_component    (_NAME ${_SOURCE} NAME_WE)
-    add_executable            (${_NAME} ${_SOURCE} $<TARGET_OBJECTS:${TEST_MAIN_NAME}>)
-    target_include_directories(${_NAME} PUBLIC 
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-      $<INSTALL_INTERFACE:include> PRIVATE source)
-    target_include_directories(${_NAME} PUBLIC ${PROJECT_INCLUDE_DIRS})
-    target_link_libraries     (${_NAME} PUBLIC ${PROJECT_LIBRARIES})
-    target_compile_definitions(${_NAME} PUBLIC ${PROJECT_COMPILE_DEFINITIONS})
-    add_test                  (${_NAME} ${_NAME})
-    set_property              (TARGET ${_NAME} PROPERTY FOLDER tests)
-    assign_source_group       (${_SOURCE})
-  endforeach()
-endif()
-
 ##################################################  Installation  ##################################################
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-config
   RUNTIME DESTINATION bin)
