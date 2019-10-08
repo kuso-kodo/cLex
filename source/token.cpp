@@ -3,7 +3,7 @@
 namespace cLex {
     const char *toCStyleString(TokenType tokenType) {
         switch (tokenType) {
-#define TOKEN_TYPE(X, Y) case TokenType:: ##X: return Y;
+#define TOKEN_TYPE(X, Y) case TokenType::X: return Y;
 #include <def/TokenType.def>
             default:
                 return "Unknown";
@@ -12,7 +12,7 @@ namespace cLex {
 
     const char *toCStyleString(KeyWord keyWord) {
         switch (keyWord) {
-#define KEYWORD(X, Y) case KeyWord:: ##X: return Y;
+#define KEYWORD(X, Y) case KeyWord::X: return Y;
 #include <def/Keyword.def>
             default:
                 return "Unknown";
@@ -21,7 +21,7 @@ namespace cLex {
 
     const char *toCStyleString(Punctuator punctuator) {
         switch (punctuator) {
-#define PUNCTUATOR(X, Y) case Punctuator:: ##X: return Y;
+#define PUNCTUATOR(X, Y) case Punctuator::X: return Y;
 #include <def/Punctuator.def>
             default:
                 return "Unknown";

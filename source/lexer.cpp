@@ -334,7 +334,7 @@ namespace cLex {
         while(!fileWrapper_.eof() && isPermittedChar(fileWrapper_.peekChar(1))) {
             tokenBuffer_.push_back(fileWrapper_.getNextChar());
         }
-#define KEYWORD(X, Y) if(tokenBuffer_ == Y) GOT_KEYWORD(KeyWord:: ##X);
+#define KEYWORD(X, Y) if(tokenBuffer_ == Y) GOT_KEYWORD(KeyWord::X);
 #include <def/Keyword.def>
         return Token(TokenType::Identifier, currentLocation_, tokenBuffer_);
     }
