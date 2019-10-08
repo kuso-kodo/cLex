@@ -10,7 +10,7 @@
 namespace cLex {
     class FileWrapper {
     public:
-        explicit FileWrapper(std::string fileName) : fileName_{std::move(fileName)}, line_{1}, column_{0}, eof_{false} {
+        explicit FileWrapper(std::string fileName) : fileName_{std::move(fileName)}, line_{1}, column_{0}, eof_{false}, count_{0} {
             sourceFile_.open(fileName_);
             assert(!sourceFile_.fail());
             this->read();
@@ -33,6 +33,7 @@ namespace cLex {
             } else {
                 column_++;
             }
+            count_++;
 
             return c;
         }
@@ -56,8 +57,16 @@ namespace cLex {
             return eof_ && buffer_.empty();
         }
 
-        void putBack(char c) {
-            buffer_.push_back(c);
+        [[nodiscard]] size_t getCount() const {
+            return count_;
+        }
+
+        [[nodiscard]] size_t getLineCount() const {
+            return line_;
+        }
+
+        [[nodiscard]] std::string getName() const {
+            return fileName_;
         }
 
         friend std::ostream& operator<<(std::ostream& os, const FileWrapper & fileWrapper);
@@ -78,6 +87,7 @@ namespace cLex {
         bool eof_;
         size_t line_;
         size_t column_;
+        size_t count_;
     };
 }
 

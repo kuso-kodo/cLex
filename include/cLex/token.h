@@ -91,7 +91,7 @@ namespace cLex {
             return literalValue_;
         }
 
-        std::string toString() const;
+        [[nodiscard]] std::string toString() const;
         // For debug.
         friend std::ostream& operator<<(std::ostream& os, const Token & token);
     private:

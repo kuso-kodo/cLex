@@ -15,6 +15,18 @@ namespace cLex {
         }
 
         Token getNextToken();
+
+        [[nodiscard]] size_t getCount() const {
+            return fileWrapper_.getCount();
+        }
+
+        [[nodiscard]] size_t getLineCount() const {
+            return fileWrapper_.getLineCount();
+        }
+
+        [[nodiscard]] std::string getSrcName() const {
+            return fileWrapper_.getName();
+        }
     private:
         void skipLineComment();
         void skipBlockComment();
