@@ -464,7 +464,7 @@ EndOfFile:      0
 Unknown:        0
 \end{lstlisting}
 
-\subsection{出错的程序一例}
+\subsection{出错程序一例}
 
 \begin{lstlisting}[language=C]
 #include <stdio.h>
@@ -480,114 +480,114 @@ int main() {
 结果如下：
 
 \begin{lstlisting}
-    PS D:\Projects\cLex\cmake-build-debug> .\cLex.exe .\wrong.c
-    Tokens:
-    Type: PreprocessingDirective
-    Location: .\wrong.c:1:1
-    Value: include <stdio.h>
+PS D:\Projects\cLex\cmake-build-debug> .\cLex.exe .\wrong.c
+Tokens:
+Type: PreprocessingDirective
+Location: .\wrong.c:1:1
+Value: include <stdio.h>
+
+Type: KeyWord
+Location: .\wrong.c:3:1
+Value: int
+
+Type: Identifier
+Location: .\wrong.c:3:5
+Value: main
+
+Type: Punctuator
+Location: .\wrong.c:3:9
+Value: (
+
+Type: Punctuator
+Location: .\wrong.c:3:10
+Value: )
+
+Type: Punctuator
+Location: .\wrong.c:3:12
+Value: {
+
+Type: KeyWord
+Location: .\wrong.c:4:5
+Value: int
+
+Type: NumericConstant(Error Detected)
+Location: .\wrong.c:4:9
+Value: 2c
+
+Type: Identifier
+Location: .\wrong.c:4:11
+Value: h
+
+Type: Punctuator
+Location: .\wrong.c:4:12
+Value: ;
+
+Type: Unknown
+Location: .\wrong.c:5:5
+Value: `
     
-    Type: KeyWord
-    Location: .\wrong.c:3:1
-    Value: int
+Type: KeyWord
+Location: .\wrong.c:6:5
+Value: double
+
+Type: Identifier
+Location: .\wrong.c:6:12
+Value: d
+ 
+Type: Punctuator
+Location: .\wrong.c:6:14
+Value: =
+
+Type: NumericConstant
+Location: .\wrong.c:6:16
+Value: 0x14
+
+Type: Identifier
+Location: .\wrong.c:6:20
+Value: ge
+
+Type: Punctuator
+Location: .\wrong.c:6:22
+Value: +
+
+Type: Identifier
+Location: .\wrong.c:6:23
+Value: f
+
+Type: Punctuator
+Location: .\wrong.c:6:24
+Value: ;
+
+Type: KeyWord
+Location: .\wrong.c:7:5
+Value: return
+
+Type: NumericConstant
+Location: .\wrong.c:7:12
+Value: 1
+
+Type: Punctuator
+Location: .\wrong.c:7:13
+Value: ;
+
+Type: Punctuator
+Location: .\wrong.c:8:1
+Value: }
     
-    Type: Identifier
-    Location: .\wrong.c:3:5
-    Value: main
-    
-    Type: Punctuator
-    Location: .\wrong.c:3:9
-    Value: (
-    
-    Type: Punctuator
-    Location: .\wrong.c:3:10
-    Value: )
-    
-    Type: Punctuator
-    Location: .\wrong.c:3:12
-    Value: {
-    
-    Type: KeyWord
-    Location: .\wrong.c:4:5
-    Value: int
-    
-    Type: NumericConstant(Error Detected)
-    Location: .\wrong.c:4:9
-    Value: 2c
-    
-    Type: Identifier
-    Location: .\wrong.c:4:11
-    Value: h
-    
-    Type: Punctuator
-    Location: .\wrong.c:4:12
-    Value: ;
-    
-    Type: Unknown
-    Location: .\wrong.c:5:5
-    Value: `
-    
-    Type: KeyWord
-    Location: .\wrong.c:6:5
-    Value: double
-    
-    Type: Identifier
-    Location: .\wrong.c:6:12
-    Value: d
-    
-    Type: Punctuator
-    Location: .\wrong.c:6:14
-    Value: =
-    
-    Type: NumericConstant
-    Location: .\wrong.c:6:16
-    Value: 0x14
-    
-    Type: Identifier
-    Location: .\wrong.c:6:20
-    Value: ge
-    
-    Type: Punctuator
-    Location: .\wrong.c:6:22
-    Value: +
-    
-    Type: Identifier
-    Location: .\wrong.c:6:23
-    Value: f
-    
-    Type: Punctuator
-    Location: .\wrong.c:6:24
-    Value: ;
-    
-    Type: KeyWord
-    Location: .\wrong.c:7:5
-    Value: return
-    
-    Type: NumericConstant
-    Location: .\wrong.c:7:12
-    Value: 1
-    
-    Type: Punctuator
-    Location: .\wrong.c:7:13
-    Value: ;
-    
-    Type: Punctuator
-    Location: .\wrong.c:8:1
-    Value: }
-    
-    File info:
-    File name:      .\wrong.c
-    Total chars:    92
-    Total lines:    8
-    KeyWord:        4
-    Identifier:     5
-    NumericConstant:        2
-    NumericConstant(Error Detected):        1
-    CharacterConstant:      0
-    StringLiteral:  0
-    Punctuator:     9
-    PreprocessingDirective: 1
-    EndOfFile:      0
-    Unknown:        1
+File info:
+File name:      .\wrong.c
+Total chars:    92
+Total lines:    8
+KeyWord:        4
+Identifier:     5
+NumericConstant:        2
+NumericConstant(Error Detected):        1
+CharacterConstant:      0
+StringLiteral:  0
+Punctuator:     9
+PreprocessingDirective: 1
+EndOfFile:      0
+Unknown:        1
 \end{lstlisting}
 
 \end{document}
